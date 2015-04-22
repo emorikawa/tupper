@@ -1,0 +1,51 @@
+<html><body>
+<canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+</body>
+<script src="node_modules/bignumber.js/bignumber.js"></script>
+<script>
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+BigNumber.config({
+  POW_PRECISION: 2000,
+  DECIMAL_PLACES: 2000,
+  EXPONENTIAL_AT: 2000
+});
+
+var k = new BigNumber("960939379918958884971672962127852754715004339660129306651505519271702802395266424689642842174350718121267153782770623355993237280874144307891325963941337723487857735749823926629715517173716995165232890538221612403238855866184013235585136048828693337902491454229288667081096184496091705183454067827731551705405381627380967602565625016981482083418783163849115590225610003652351370343874461848378737238198224849863465033159410054974700593138339226497249461751545728366702369745461014655997933798537483143786841806593422227898388722980000748404719");
+
+two = new BigNumber(2)
+seventeen = new BigNumber(17)
+negSeventeen = new BigNumber(-17)
+
+fn = function(x, y) {
+  console.log(x,y);
+  x = new BigNumber(x);
+  y = new BigNumber(y).plus(k);
+
+  n = (y.div(seventeen).floor())
+  .mul(
+    (two).pow(
+      ((negSeventeen).mul(x.floor())).minus(
+        y.floor().modulo(seventeen)
+      )
+    )
+  ).modulo(two)
+  .floor()
+
+  return n.comparedTo(new BigNumber(0.5)) == -1
+}
+
+ctx.fillStyle = "green";
+var xboxSize = 2;
+var yboxSize = 2;
+for(var x = 0; x < 106*xboxSize; x+=xboxSize) {
+  for(var y = 0; y < 17*yboxSize; y+=yboxSize) {
+    if(!fn(x/xboxSize,y/yboxSize)) {
+        ctx.fillRect(106*xboxSize - x, y, xboxSize, yboxSize);
+    }
+  }
+}
+</script>
+</html>
